@@ -14,11 +14,14 @@ class InstitutionComponent extends Component
     use WithPagination;
 
     public $totalRegistros = 0;
+    public $search = '';
+    public $cant = 5;
+    public $id;
     public $full_name;
     public $short_name;
     public $description;
-    public $search = '';
 
+    /* #region public function render() */
     public function render()
     {
         if($this->search != '')
@@ -30,22 +33,22 @@ class InstitutionComponent extends Component
                                             ->orWhere('short_name','like','%'.$this->search.'%')
                                             ->orWhere('description','like','%'.$this->search.'%')
                                             ->orderBy('id', 'desc')
-                                            ->paginate(1);
+                                            ->paginate($this->cant);
 
         return view('livewire.institution.institution-component',[
             'querySelectInstitution' => $querySelectInstitution
         ]);
     }
+    /* #endregion */
 
+    /* #region public function mount() */
     public function mount()
     {
-        
-    }
 
-    /**
-     * Summary of store
-     * @return void
-     */
+    }
+    /* #endregion */
+
+    /* #region public function store() */
     public function store()
     {
         $rules = [
@@ -53,7 +56,7 @@ class InstitutionComponent extends Component
             'short_name' => 'required|max:255',
             'description' => 'required|max:10'
         ];
-        
+
         $messages = [
             'full_name.required' => 'El campo nombre completo es requerido',
             'full_name.max' => 'El campo nombre completo no debe ser mayor a 255 caracteres',
@@ -76,5 +79,12 @@ class InstitutionComponent extends Component
         $this->dispatch('msg', 'Institución creada correctamente');
 
         $this->reset(['full_name', 'short_name', 'description']);
+    }
+    /* #endregion */
+
+    public function edit(Institution $institution)
+    {
+        $this->id = $institution->id;
+        dump($institution);
     }
 }
