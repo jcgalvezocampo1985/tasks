@@ -10,12 +10,12 @@
         </select>
         <span>Entradas</span>
     </div>
-    <div>
-        <input type="text" placeholder="Buscar..." class="form-control">
+    <div wire:ignore>
+        <input wire:model.live='search' wire:focus="search" type="text" placeholder="Buscar..." class="form-control">
     </div>
 </div>
 <div class="table-responsive">
-    <table class="table table-striped table-bordered display nowrap">
+    <table class="table table-striped display nowrap">
         <thead>
             <tr>
                 {{$thead}}

@@ -4,25 +4,42 @@ namespace App\Livewire\Institution;
 
 use Livewire\Component;
 use Livewire\Attributes\Title;
+use Livewire\WithPagination;
 
 use App\Models\Institution;
 
 #[Title('Instituciones')]
 class InstitutionComponent extends Component
 {
+    use WithPagination;
+
     public $totalRegistros = 0;
     public $full_name;
     public $short_name;
     public $description;
+    public $search = '';
 
     public function render()
     {
-        return view('livewire.institution.institution-component');
+        if($this->search != '')
+            $this->resetPage();
+
+        $this->totalRegistros = Institution::count();
+
+        $querySelectInstitution = Institution::where('full_name','like','%'.$this->search.'%')
+                                            ->orWhere('short_name','like','%'.$this->search.'%')
+                                            ->orWhere('description','like','%'.$this->search.'%')
+                                            ->orderBy('id', 'desc')
+                                            ->paginate(1);
+
+        return view('livewire.institution.institution-component',[
+            'querySelectInstitution' => $querySelectInstitution
+        ]);
     }
 
     public function mount()
     {
-        $this->totalRegistros = Institution::count();
+        
     }
 
     /**
@@ -56,6 +73,8 @@ class InstitutionComponent extends Component
         $institution->save();
 
         $this->dispatch('close-modal', 'modalInstitution');
+        $this->dispatch('msg', 'Institución creada correctamente');
 
+        $this->reset(['full_name', 'short_name', 'description']);
     }
 }

@@ -1,5 +1,5 @@
 <div>
-    <x-card cardTitle="Listado de Categorías ({{$this->totalRegistros}})" cardTools="Card Tools" cardFooter="Card Footer">
+    <x-card cardTitle="Listado de Categorías ({{$this->totalRegistros}})" cardTools="Card Tools">
         <x:slot:cardTools>
             <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modalInstitution">Crear Institución</a>
         </x:slot>
@@ -11,14 +11,15 @@
                 <th>Nombre Corto</th>
                 <th>Descripción</th>
                 <th>Estado Registro</th>
-                <th colspan="4" width="3%">Acciones</th>
+                <th colspan="2" width="3%">Acciones</th>
             </x-slot:thead>
+            @forelse($querySelectInstitution as $institution)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{$institution->id}}</td>
+                <td>{{$institution->full_name}}</td>
+                <td>{{$institution->short_name}}</td>
+                <td>{{$institution->description}}</td>
+                <td>{{$institution->register_status}}</td>
                 <td>
                     <a href="#" class="btn btn-info btn-xs" title="Ver">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 576 512">
@@ -34,21 +35,32 @@
                     </a>
                 </td>
             </tr>
+            @empty
+                <tr class="text-center">
+                    <td colspan="7">Sin registros para mostrar</td>
+                </tr>
+            @endforelse
         </x-table>
+        <x-slot:cardFooter>
+            {{$querySelectInstitution->links()}}
+        </x-slot>
     </x-card>
 
     <x-modal modalId="modalInstitution" modalTitle="Instituciones">
         <form wire:submit="store">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <label for="full_name">Nombre Completo</label>
                     <input wire:model.live='full_name' type="text" class="form-control" placeholder="Nombre Completo">
                     @error('full_name') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                    <label for="short_name">Nombre Corto</label>
                     <input wire:model.live='short_name' type="text" class="form-control" placeholder="Nombre Corto">
                     @error('short_name') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
                 </div>
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                    <label for="description">Descripción</label>
                     <textarea wire:model.live='description' class="form-control" placeholder="Descripción"></textarea>
                     @error('description') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
                 </div>
