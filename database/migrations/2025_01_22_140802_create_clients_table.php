@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('short_name');
             $table->text('description')->nullable();
             $table->enum('register_status', ['Enabled', 'Disabled']);
-            $table->unsignedInteger('deparment_id');
+            $table->unsignedInteger('department_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('deparment_id')->references('id')->on('deparments')->onDelete('restrict')->onUpdate('restrict');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
         });
     }

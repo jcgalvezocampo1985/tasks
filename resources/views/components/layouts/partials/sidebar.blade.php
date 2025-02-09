@@ -55,32 +55,32 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+            <a href="{{route('departamentos')}}" class="nav-link">
+              {!!icons('department')!!}
               <p>
                 Departamentos
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+          {{-- <li class="nav-item">
+            <a href="" class="nav-link">
+              {!!icons('client')!!}
               <p>
                 Clientes
               </p>
             </a>
-          </li>
+          </li> --}}
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+            <a href="{{route('users')}}" class="nav-link">
+              {!!icons('user')!!}
               <p>
                 Usuarios
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="pages/widgets.html" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+            <a href="{{route('tareas')}}" class="nav-link">
+              {!!icons('task')!!}
               <p>
                 Tareas
               </p>

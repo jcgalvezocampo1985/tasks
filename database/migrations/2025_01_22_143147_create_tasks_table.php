@@ -21,8 +21,8 @@ return new class extends Migration
             $table->char('minutes', 10);
             $table->enum('difficulty_level', ['High','Medium','Low']);
             $table->enum('priority', ['High','Medium','Low']);
-            $table->enum('task_status', ['Paused','Started','Stoped','Finished']);
-            $table->enum('register_status', ['Enabled', 'Disabled']);
+            $table->enum('task_status', ['Paused','Started','Stoped','Finished'])->default('Paused');
+            $table->enum('register_status', ['Enabled', 'Disabled'])->default('Enabled');
             $table->unsignedInteger('client_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

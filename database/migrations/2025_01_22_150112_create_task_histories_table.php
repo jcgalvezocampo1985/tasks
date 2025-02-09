@@ -17,8 +17,8 @@ return new class extends Migration
             $table->date('end_date');
             $table->char('minutes', 10);
             $table->text('description');
-            $table->enum('task_status', ['Paused','Started','Stoped','Finished']);
-            $table->enum('register_status', ['Enabled', 'Disabled']);
+            $table->enum('task_status', ['Paused','Started','Stoped','Finished'])->default('Paused');
+            $table->enum('register_status', ['Enabled', 'Disabled'])->default('Enabled');
             $table->unsignedInteger('task_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

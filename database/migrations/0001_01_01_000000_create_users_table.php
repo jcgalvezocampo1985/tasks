@@ -15,9 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->enum('register_status', ['Enabled', 'Disabled']);
+            $table->enum('register_status', ['Enabled', 'Disabled'])->default('Enabled');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('perfil', ['Admin','Cliente','Tecnico']);
             $table->rememberToken();
             $table->timestamps();
         });

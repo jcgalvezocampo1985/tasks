@@ -2,11 +2,13 @@
 
 namespace App\Livewire\Institution;
 
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Attributes\Title;
 use Livewire\WithPagination;
 
 use App\Models\Institution;
+
 
 #[Title('Instituciones')]
 class InstitutionComponent extends Component
@@ -20,6 +22,35 @@ class InstitutionComponent extends Component
     public $full_name;
     public $short_name;
     public $description;
+
+    /* #region public function mount() */
+    public function mount()
+    {
+
+    }
+    /* #endregion */
+
+    /* #region protected function rules() */
+    protected function rules()
+    {
+        return [
+            'full_name' => 'required|max:255|unique:institutions,id,'.$this->id,
+            'short_name' => 'required|max:255',
+            'description' => 'required|max:500'
+        ];
+    }
+    /* #endregion */
+
+    /* #region protected function validationAttributes() */
+    protected function validationAttributes()
+    {
+        return [
+            'full_name' => 'Nombre Completo',
+            'short_name' => 'Nombre Corto',
+            'description' => 'Descripción'
+        ];
+    }
+    /* #endregion */
 
     /* #region public function render() */
     public function render()
@@ -41,50 +72,101 @@ class InstitutionComponent extends Component
     }
     /* #endregion */
 
-    /* #region public function mount() */
-    public function mount()
+    /* #region public function create() */
+    public function create()
     {
-
+        $this->clean();
+        $this->id = 0;
+        //Abrir modal
+        $this->dispatch('open-modal', 'modalInstitution');
     }
     /* #endregion */
 
     /* #region public function store() */
     public function store()
     {
-        $rules = [
-            'full_name' => 'required|max:255|unique:institutions',
-            'short_name' => 'required|max:255',
-            'description' => 'required|max:10'
-        ];
+        Institution::create($this->validate());
 
-        $messages = [
-            'full_name.required' => 'El campo nombre completo es requerido',
-            'full_name.max' => 'El campo nombre completo no debe ser mayor a 255 caracteres',
-            'full_name.unique' => 'El campo nombre completo ya existe',
-            'short_name.required' => 'El campo nombre corto es requerido',
-            'short_name.max' => 'El campo nombre corto no debe ser mayor a 255 caracteres',
-            'description.required' => 'El campo descripción es requerido',
-            'description.max' => 'El campo descripción no debe ser mayor a 500 caracteres'
-        ];
-
-        $this->validate($rules, $messages);
-
-        $institution = new Institution();
-        $institution->full_name = $this->full_name;
-        $institution->short_name = $this->short_name;
-        $institution->description = $this->description;
-        $institution->save();
-
+        //Cerrar modal
         $this->dispatch('close-modal', 'modalInstitution');
+        //Mostrar mensaje
         $this->dispatch('msg', 'Institución creada correctamente');
-
-        $this->reset(['full_name', 'short_name', 'description']);
+        //Reset de campos
+        $this->clean();
     }
     /* #endregion */
 
+    /* #region public function edit(Institution $institution) */
     public function edit(Institution $institution)
     {
+        $this->clean();
+
         $this->id = $institution->id;
-        dump($institution);
+        $this->full_name = $institution->full_name;
+        $this->short_name = $institution->short_name;
+        $this->description = $institution->description;
+
+        //Abrir modal
+        $this->dispatch('open-modal', 'modalInstitution');
     }
+    /* #endregion */
+
+    /* #region public function update(Institution $institution) */
+    public function update(Institution $institution)
+    {
+        $institution->update($this->validate());
+
+        //Cerrar modal
+        $this->dispatch('close-modal', 'modalInstitution');
+        //Mostrar mensaje
+        $this->dispatch('msg', 'Institución modificada correctamente');
+        //Reset de campos
+        $this->clean();
+    }
+    /* #endregion */
+
+    /* #region public function detroy($id) */
+    #[On('destroyInstitution')]
+    public function detroy($id)
+    {
+        $institution = Institution::findOrFail($id);
+        $institution->delete();
+
+        $this->dispatch('msg', 'Institución eliminada correctamente');
+    }
+    /* #endregion */
+
+    /* #region public function disabled($id) */
+    #[On('disabledInstitution')]
+    public function disabled($id)
+    {
+        $institution = Institution::findOrFail($id);
+        $institution->register_status = 'Disabled';
+        $institution->save();
+
+        $this->dispatch('msg', 'Institución deshabilitada correctamente');
+    }
+    /* #endregion */
+    
+    /* #region public function enabled($id) */
+    #[On('enabledInstitution')]
+    public function enabled($id)
+    {
+        $institution = Institution::findOrFail($id);
+        $institution->register_status = 'Enabled';
+        $institution->save();
+
+        $this->dispatch('msg', 'Institución habilitada correctamente');
+    }
+    /* #endregion */
+
+    /* #region public function clean() */
+    public function clean()
+    {
+        //Reset de campos
+        $this->reset(['id','full_name', 'short_name', 'description']);
+        //Reset mensajes validación
+        $this->resetErrorBag();
+    }
+    /* #endregion */
 }

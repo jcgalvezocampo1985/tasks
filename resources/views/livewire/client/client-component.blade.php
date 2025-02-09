@@ -1,9 +1,9 @@
 <div>
-    <x-card cardTitle="Listado de Instituciones ({{$this->totalRegistros}})" cardTools="Card Tools">
+    <x-card cardTitle="Listado de Departamentos ({{$this->totalRegistros}})" cardTools="Card Tools">
         <x:slot:cardTools>
             <a href="#" class="btn btn-primary" wire:click='create'>
                 {!! icons('plus') !!}
-                Crear Institución
+                Crear Departamento
             </a>
         </x:slot>
 
@@ -13,33 +13,35 @@
                 <th>Nombre Completo</th>
                 <th>Nombre Corto</th>
                 <th>Descripción</th>
+                <th>Institución</th>
                 <th>Estado Registro</th>
                 <th colspan="2" width="3%">Acciones</th>
             </x-slot:thead>
-            @forelse($querySelectInstitution as $institution)
+            @forelse($querySelectDepartment as $department)
             <tr>
-                <td>{{$institution->id}}</td>
-                <td>{{$institution->full_name}}</td>
-                <td>{{$institution->short_name}}</td>
-                <td>{{$institution->description}}</td>
+                <td>{{$department->id}}</td>
+                <td>{{$department->full_name}}</td>
+                <td>{{$department->short_name}}</td>
+                <td>{{$department->description}}</td>
+                <td>{{$department->institution->full_name}}</td>
                 <td>
-                    @if($institution->register_status == 'Enabled')
-                        <a wire:click="$dispatch('disabled', {id: {{$institution->id}}, eventName: 'disabledInstitution'})" class="btn" title="Clic para deshabilitar">
-                            {!! badge($institution->register_status) !!}
+                    @if($department->register_status == 'Enabled')
+                        <a wire:click="$dispatch('disabled', {id: {{$department->id}}, eventName: 'disabledDepartment'})" class="btn" title="Clic para deshabilitar">
+                            {!! badge($department->register_status) !!}
                         </a>
                     @else
-                        <a wire:click="$dispatch('enabled', {id: {{$institution->id}}, eventName: 'enabledInstitution'})" class="btn" title="Clic para habilitar">
-                            {!! badge($institution->register_status) !!}
+                        <a wire:click="$dispatch('enabled', {id: {{$department->id}}, eventName: 'enabledDepartment'})" class="btn" title="Clic para habilitar">
+                            {!! badge($department->register_status) !!}
                         </a>
                     @endif
                 </td>
                 <td>
-                    <a href="#" wire:click='edit({{$institution->id}})' class="btn btn-info btn-xs" title="Editar">
+                    <a href="#" wire:click='edit({{$department->id}})' class="btn btn-info btn-xs" title="Editar">
                         {!! icons('edit') !!}
                     </a>
                 </td>
                 <td>
-                    <a wire:click="$dispatch('delete', {id: {{$institution->id}}, eventName: 'destroyInstitution'})" class="btn btn-danger btn-xs" title="Eliminar">
+                    <a wire:click="$dispatch('delete', {id: {{$department->id}}, eventName: 'destroyDepartment'})" class="btn btn-danger btn-xs" title="Eliminar">
                         {!! icons('delete') !!}
                     </a>
                 </td>
@@ -51,11 +53,11 @@
             @endforelse
         </x-table>
         <x-slot:cardFooter>
-            {{$querySelectInstitution->links()}}
+            {{$querySelectDepartment->links()}}
         </x-slot>
     </x-card>
 
-    <x-modal modalId="modalInstitution" modalTitle="Instituciones">
+    <x-modal modalId="modalDepartment" modalTitle="Departamentos">
         <form wire:submit="{{ $id == 0 ? "store" : "update($id)" }}">
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
@@ -72,6 +74,16 @@
                     <label for="description">Descripción</label>
                     <textarea wire:model.live='description' class="form-control" placeholder="Descripción"></textarea>
                     @error('description') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
+                    <label for="institution_id">Institución</label>
+                    <select wire:model.live='institution_id' class="form-control">
+                        <option value="">Selecciona</option>
+                        @foreach($querySelectInstitution as $row)
+                        <option value="{{$row->id}}">{{$row->full_name}}</option>                            
+                        @endforeach
+                    </select>
+                    @error('institution_id') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
                 </div>
             </div>
             <hr>

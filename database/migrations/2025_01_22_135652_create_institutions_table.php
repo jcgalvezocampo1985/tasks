@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('full_name');
             $table->string('short_name');
             $table->text('description')->nullable();
-            $table->enum('register_status', ['Enabled', 'Disabled']);
+            $table->enum('register_status', ['Enabled', 'Disabled'])->default('Enabled');
             $table->timestamps();
             $table->softDeletes();
         });

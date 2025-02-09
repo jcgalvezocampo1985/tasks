@@ -20,4 +20,6 @@
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{asset('dist/js/pages/dashboard2.js')}}"></script>
 
+<script src="{{asset('plugins/sweetalert2/sweetalert2.all.min.js')}}"></script>
+
 @yield('js')

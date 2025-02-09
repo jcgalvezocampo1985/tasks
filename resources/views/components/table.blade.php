@@ -14,7 +14,7 @@
     </div>
 </div>
 <div class="table-responsive">
-    <table class="table table-striped display nowrap">
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 {{$thead}}
