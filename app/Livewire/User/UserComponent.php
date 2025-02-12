@@ -2,6 +2,7 @@
 
 namespace App\Livewire\User;
 
+use App\Models\Client;
 use App\Models\Institution;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,6 +11,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
 use App\Models\User;
+use Illuminate\Validation\Rule;
 
 #[Title('Usuarios')]
 class UserComponent extends Component
@@ -25,6 +27,11 @@ class UserComponent extends Component
     public $email;
     public $perfil;
     public $password;
+    public $full_name;
+    public $short_name;
+    public $description;
+    public $institution_id;
+    public $department_id;
 
     /* #region public function mount() */
     public function mount()
@@ -36,24 +43,50 @@ class UserComponent extends Component
     /* #region protected function rules() */
     protected function rules()
     {
-        return [
+        $rules = [
             'name' => 'required|max:255|unique:users,id,'.$this->id,
             'email' => 'required|max:255|unique:users,email,'.$this->id,
-            'perfil' => 'required|in(["Admin","Cliente","Técnico"])',
+            'perfil' => [
+                'required',
+                Rule::in(["Admin","Cliente","Técnico"]),
+            ],
             'password' => 'required'
         ];
+
+        if($this->perfil == 'Cliente')
+            $rules = array_merge($rules, [
+                'full_name' => 'required|max:255',
+                'short_name' => 'required|max:255',
+                'description' => 'max: 255',
+                'institution_id' => 'required',
+                'department_id' => 'required'
+            ]);
+
+        return $rules;
     }
     /* #endregion */
 
     /* #region protected function validationAttributes() */
     protected function validationAttributes()
     {
-        return [
+        $attributes = [
             'name' => 'Nombre',
             'email' => 'Email',
             'perfil' => 'Perfil',
-            'passsword' => 'Password'
+            'passsword' => 'Password',
+            'full_name' => 'Nombre Completo'
         ];
+
+        if($this->perfil == 'Cliente')
+            $attributes = array_merge($attributes, [
+                'full_name' => 'Nombre Completo',
+                'short_name' => 'Nombre Corto',
+                'description' => 'Descripción',
+                'institution_id' => 'Institución',
+                'department_id' => 'Departamento'
+            ]);
+
+        return $attributes;
     }
     /* #endregion */
 
@@ -70,8 +103,11 @@ class UserComponent extends Component
                                     ->orderBy('id', 'desc')
                                     ->paginate($this->cant);
 
+        $querySelectInstitution = Institution::all();
+
         return view('livewire.user.user-component',[
-            'querySelectUser' => $querySelectUser
+            'querySelectUser' => $querySelectUser,
+            'querySelectInstitution' => $querySelectInstitution
         ]);
     }
     /* #endregion */
@@ -89,8 +125,11 @@ class UserComponent extends Component
     /* #region public function store() */
     public function store()
     {
-        User::create($this->validate());
-
+        if(User::create($this->validate()))
+        {
+            if($this->perfil == 'Cliente')
+                Client::create($this->validate());
+        }
         //Cerrar modal
         $this->dispatch('close-modal', 'modalUser');
         //Mostrar mensaje
@@ -174,10 +213,4 @@ class UserComponent extends Component
         $this->resetErrorBag();
     }
     /* #endregion */
-
-    #[On('getPerfil')]
-    public function getPerfil()
-    {
-        dd($this->perfil);
-    }
 }
