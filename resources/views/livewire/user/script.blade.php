@@ -4,4 +4,7 @@
             alert($(this).val());
         });
     });
+    $wire.on('perfil', (event) => {
+        let perfil = 
+    });
 </script>
