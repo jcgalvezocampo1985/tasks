@@ -3,6 +3,7 @@
 namespace App\Livewire\Task;
 
 use App\Models\Task;
+use App\Models\User;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -103,8 +104,13 @@ class TaskComponent extends Component
                                 ->orderBy('id', 'desc')
                                 ->paginate($this->cant);
 
+        $querySelectUserClientes = User::where('perfil', 'Cliente')->get();
+        $querySelectUserTecnicos = User::where('perfil', 'Técnico')->get();
+
         return view('livewire.task.task-component',[
-            'querySelectTask' => $querySelectTask
+            'querySelectTask' => $querySelectTask,
+            'querySelectUserClientes' => $querySelectUserClientes,
+            'querySelectUserTecnicos' => $querySelectUserTecnicos
         ]);
     }
     /* #endregion */

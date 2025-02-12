@@ -174,4 +174,10 @@ class UserComponent extends Component
         $this->resetErrorBag();
     }
     /* #endregion */
+
+    #[On('getPerfil')]
+    public function getPerfil()
+    {
+        dd($this->perfil);
+    }
 }

@@ -25,7 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     }); */
 
 Route::get('/inicio', Inicio::class)->name('inicio');
-Route::get('/instituciones', InstitutionComponent::class)->name('instituciones')->middleware(['auth']);;
-Route::get('/departamentos', DepartmentComponent::class)->name('departamentos')->middleware(['auth']);;
-Route::get('/usuarios', UserComponent::class)->name('users')->middleware(['auth']);
-Route::get('/tareas', TaskComponent::class)->name('tareas')->middleware(['auth']);
+Route::get('/instituciones', InstitutionComponent::class)->name('instituciones');//->middleware(['auth']);;
+Route::get('/departamentos', DepartmentComponent::class)->name('departamentos');//->middleware(['auth']);;
+Route::get('/usuarios', UserComponent::class)->name('users');//->middleware(['auth']);
+Route::get('/tareas', TaskComponent::class)->name('tareas');//->middleware(['auth']);

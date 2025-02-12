@@ -3,7 +3,7 @@
         <x:slot:cardTools>
             <a href="#" class="btn btn-primary" wire:click='create'>
                 {!! icons('plus') !!}
-                Crear Usuario
+                Crear Tarea
             </a>
         </x:slot>
 
@@ -71,47 +71,5 @@
         </x-slot>
     </x-card>
 
-    <x-modal modalId="modalTask" modalTitle="Tareas">
-        <form wire:submit="{{ $id == 0 ? "store" : "update($id)" }}">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <label for="name">Nombre</label>
-                    <input wire:model.live='name' type="text" class="form-control" placeholder="Nombre">
-                    @error('name') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <label for="description">Descripción</label>
-                    <textarea wire:model.live='description' class="form-control" placeholder="Descripción"></textarea>
-                    @error('description') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <label for="url_course">Curso URL</label>
-                    <input wire:model.live='url_course' type="text" class="form-control" placeholder="Curso URL">
-                    @error('url_course') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <label for="start_date">Fecha Inicio</label>
-                    <input wire:model.live='start_date' type="date" class="form-control" placeholder="Fecha Inicio">
-                    @error('start_date') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <label for="end_date">Fecha Término</label>
-                    <input wire:model.live='end_date' type="date" class="form-control" placeholder="Fecha Término">
-                    @error('end_date') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
-                    <label for="difficulty_level">Nivel Dificultad</label>
-                    <select wire:model.live='difficulty_level' class="form-control">
-                        <option value="">Selecciona</option>
-                        <option value="Admin">Administrador</option>
-                        <option value="Cliente">Cliente</option>
-                        <option value="Técnico">Técnico</option>
-                    </select>
-                    @error('difficulty_level') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-                </div>
-            </div>
-            <hr>
-            <button class="btn btn-primary float-right">Guardar</button>
-        </form>
-    </x-modal>
+    @include('livewire.task.form-component')
 </div>
