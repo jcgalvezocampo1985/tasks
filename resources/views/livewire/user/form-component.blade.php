@@ -56,6 +56,9 @@
                         <label for="department_id">Institución</label>
                         <select wire:model.live='department_id' class="form-control">
                             <option value="">Selecciona</option>
+                            @foreach($querySelectDepartment as $row)
+                            <option value="{{$row->id}}">{{$row->full_name}}</option>
+                            @endforeach
                         </select>
                         @error('department_id') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
                     </div>

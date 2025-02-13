@@ -86,6 +86,17 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('logout')}}" class="nav-link" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+              {!!icons('task')!!}
+              <p>
+                Salir
+              </p>
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+            </form>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

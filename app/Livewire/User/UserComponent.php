@@ -3,6 +3,7 @@
 namespace App\Livewire\User;
 
 use App\Models\Client;
+use App\Models\Department;
 use App\Models\Institution;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -32,13 +33,21 @@ class UserComponent extends Component
     public $description;
     public $institution_id;
     public $department_id;
+    public $querySelectInstitution = [];
+    public $querySelectDepartment = [];
 
     /* #region public function mount() */
     public function mount()
     {
-
+        $this->querySelectInstitution = Institution::all();
+        $this->querySelectDepartment = collect();
     }
     /* #endregion */
+
+    public function updatedInstitutionId($value)
+    {
+        $this->querySelectDepartment = Department::where('institution_id', $value)->get();
+    }
 
     /* #region protected function rules() */
     protected function rules()
@@ -99,15 +108,12 @@ class UserComponent extends Component
         $this->totalRegistros = User::count();
 
         $querySelectUser = User::where('name','like','%'.$this->search.'%')
-                                    ->orWhere('email','like','%'.$this->search.'%')
-                                    ->orderBy('id', 'desc')
-                                    ->paginate($this->cant);
-
-        $querySelectInstitution = Institution::all();
+                                ->orWhere('email','like','%'.$this->search.'%')
+                                ->orderBy('id', 'desc')
+                                ->paginate($this->cant);
 
         return view('livewire.user.user-component',[
-            'querySelectUser' => $querySelectUser,
-            'querySelectInstitution' => $querySelectInstitution
+            'querySelectUser' => $querySelectUser
         ]);
     }
     /* #endregion */
@@ -191,7 +197,7 @@ class UserComponent extends Component
         $this->dispatch('msg', 'Usuario deshabilitado correctamente');
     }
     /* #endregion */
-    
+
     /* #region public function enabled($id) */
     #[On('enabledUser')]
     public function enabled($id)
