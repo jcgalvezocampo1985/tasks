@@ -16,6 +16,8 @@ class TaskComponent extends Component
     use WithPagination;
     use WithFileUploads;
 
+    /* #region Properties */
+    public $menu = 'Tareas';
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -31,11 +33,12 @@ class TaskComponent extends Component
     public $task_status;
     public $client_id;
     public $user_id;
+    /* #endregion */
 
     /* #region public function mount() */
     public function mount()
     {
-
+        
     }
     /* #endregion */
 
@@ -107,10 +110,10 @@ class TaskComponent extends Component
         $querySelectUserClientes = User::where('perfil', 'Cliente')->get();
         $querySelectUserTecnicos = User::where('perfil', 'Técnico')->get();
 
-        return view('livewire.task.task-component',[
+        return view('livewire.task.index-component',[
             'querySelectTask' => $querySelectTask,
             'querySelectUserClientes' => $querySelectUserClientes,
-            'querySelectUserTecnicos' => $querySelectUserTecnicos
+            'querySelectUserTecnicos' => $querySelectUserTecnicos,
         ]);
     }
     /* #endregion */
@@ -133,7 +136,7 @@ class TaskComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalTask');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Tarea creada correctamente');
+        $this->dispatch('msg', ['msg' => 'Tarea creada correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -163,7 +166,7 @@ class TaskComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalUser');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Usuario modificado correctamente');
+        $this->dispatch('msg', ['msg' => 'Tarea modificada correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -176,7 +179,7 @@ class TaskComponent extends Component
         $user = User::findOrFail($id);
         $user->delete();
 
-        $this->dispatch('msg', 'Usuario eliminado correctamente');
+        $this->dispatch('msg', ['msg' => 'Tarea eliminada correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
@@ -188,7 +191,7 @@ class TaskComponent extends Component
         $user->register_status = 'Disabled';
         $user->save();
 
-        $this->dispatch('msg', 'Usuario deshabilitado correctamente');
+        $this->dispatch('msg', ['msg' => 'Tarea deshabilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
     
@@ -200,7 +203,7 @@ class TaskComponent extends Component
         $user->register_status = 'Enabled';
         $user->save();
 
-        $this->dispatch('msg', 'Usuario habilitado correctamente');
+        $this->dispatch('msg', ['msg' => 'Tarea habilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
 

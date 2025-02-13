@@ -13,13 +13,17 @@ use Livewire\WithFileUploads;
 
 use App\Models\User;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CreateUserMail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 #[Title('Usuarios')]
 class UserComponent extends Component
 {
     use WithPagination;
-    use WithFileUploads;
 
+    /* #region Properties */
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -35,6 +39,9 @@ class UserComponent extends Component
     public $department_id;
     public $querySelectInstitution = [];
     public $querySelectDepartment = [];
+    public $userHasTasks = 0;
+
+    /* #endregion */
 
     /* #region public function mount() */
     public function mount()
@@ -44,10 +51,12 @@ class UserComponent extends Component
     }
     /* #endregion */
 
+    /* #region public function updatedInstitutionId($value) */
     public function updatedInstitutionId($value)
     {
         $this->querySelectDepartment = Department::where('institution_id', $value)->get();
     }
+    /* #endregion */
 
     /* #region protected function rules() */
     protected function rules()
@@ -58,8 +67,7 @@ class UserComponent extends Component
             'perfil' => [
                 'required',
                 Rule::in(["Admin","Cliente","Técnico"]),
-            ],
-            'password' => 'required'
+            ]
         ];
 
         if($this->perfil == 'Cliente')
@@ -81,9 +89,7 @@ class UserComponent extends Component
         $attributes = [
             'name' => 'Nombre',
             'email' => 'Email',
-            'perfil' => 'Perfil',
-            'passsword' => 'Password',
-            'full_name' => 'Nombre Completo'
+            'perfil' => 'Perfil'
         ];
 
         if($this->perfil == 'Cliente')
@@ -112,7 +118,7 @@ class UserComponent extends Component
                                 ->orderBy('id', 'desc')
                                 ->paginate($this->cant);
 
-        return view('livewire.user.user-component',[
+        return view('livewire.user.index-component',[
             'querySelectUser' => $querySelectUser
         ]);
     }
@@ -131,15 +137,31 @@ class UserComponent extends Component
     /* #region public function store() */
     public function store()
     {
-        if(User::create($this->validate()))
+        $password = str::random(10);
+        $queryStoreUser = User::create(array_merge($this->validate(), ['password' => Hash::make($password)]));
+
+        if($queryStoreUser)
         {
             if($this->perfil == 'Cliente')
-                Client::create($this->validate());
+                Client::create([
+                    'full_name' => $this->full_name,
+                    'short_name' => $this->short_name,
+                    'description' => $this->description,
+                    'department_id' => $this->department_id,
+                    'user_id' => $queryStoreUser->id
+                ]);
+
+            Mail::to($this->email)->send(new CreateUserMail([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => $password,
+                'url' => url('/')
+            ]));
         }
         //Cerrar modal
         $this->dispatch('close-modal', 'modalUser');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Usuario creado correctamente');
+        $this->dispatch('msg', ['msg' => 'Usuario creado correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -154,7 +176,16 @@ class UserComponent extends Component
         $this->name = $user->name;
         $this->email = $user->email;
         $this->perfil = $user->perfil;
-        $this->password = $user->password;
+
+        if($user->clients->count() > 0){
+            $this->full_name = $user->clients[0]->full_name;
+            $this->short_name = $user->clients[0]->short_name;
+            $this->description = $user->clients[0]->description;
+            $this->department_id = $user->clients[0]->department_id;
+            $this->institution_id = $user->clients[0]->department->institution_id;
+
+            $this->querySelectDepartment = Department::where('institution_id', $this->institution_id)->get();
+        }
 
         //Abrir modal
         $this->dispatch('open-modal', 'modalUser');
@@ -166,10 +197,17 @@ class UserComponent extends Component
     {
         $user->update($this->validate());
 
+        if($user->clients->count() > 0){
+            $user->clients[0]->full_name = $this->full_name;
+            $user->clients[0]->short_name = $this->short_name;
+            $user->clients[0]->description = $this->description;
+            $user->clients[0]->department_id = $this->department_id;
+            $user->clients[0]->update();
+        }
         //Cerrar modal
         $this->dispatch('close-modal', 'modalUser');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Usuario modificado correctamente');
+        $this->dispatch('msg', ['msg' => 'Usuario modificado correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -180,9 +218,17 @@ class UserComponent extends Component
     public function detroy($id)
     {
         $user = User::findOrFail($id);
-        $user->delete();
 
-        $this->dispatch('msg', 'Usuario eliminado correctamente');
+        if($user->clients[0]->tasks->count() == 0)
+        {
+            $user->clients()->delete();
+            $user->delete();
+            $this->dispatch('msg', ['msg' => 'Usuario eliminado correctamente', 'type' => 'success']);
+        }
+        else
+        {
+            $this->dispatch('msg', ['msg' => 'El usuario no se puede eliminar debido a que tiene tareas relacionadas', 'type' => 'danger']);
+        }
     }
     /* #endregion */
 
@@ -194,7 +240,12 @@ class UserComponent extends Component
         $user->register_status = 'Disabled';
         $user->save();
 
-        $this->dispatch('msg', 'Usuario deshabilitado correctamente');
+        if($user->clients->count() > 0){
+            $user->clients[0]->register_status = 'Disabled';
+            $user->clients[0]->save();
+        }
+
+        $this->dispatch('msg', ['msg' => 'Usuario deshabilitado correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
@@ -206,7 +257,12 @@ class UserComponent extends Component
         $user->register_status = 'Enabled';
         $user->save();
 
-        $this->dispatch('msg', 'Usuario habilitado correctamente');
+        if($user->clients->count() > 0){
+            $user->clients[0]->register_status = 'Enabled';
+            $user->clients[0]->save();
+        }
+
+        $this->dispatch('msg', ['msg' => 'Usuario habilitado correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
@@ -214,7 +270,7 @@ class UserComponent extends Component
     public function clean()
     {
         //Reset de campos
-        $this->reset(['id','name','email','perfil','password']);
+        $this->reset(['id','name','email','perfil','full_name','short_name','description','deparment_id','institution_id']);
         //Reset mensajes validación
         $this->resetErrorBag();
     }

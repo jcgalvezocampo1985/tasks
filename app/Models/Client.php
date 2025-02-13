@@ -10,7 +10,7 @@ class Client extends Model
     /** @use HasFactory<\Database\Factories\ClientFactory> */
     use HasFactory;
 
-    protected $table = 'departments';
+    protected $table = 'clients';
     protected $guarded = ['id'];
     protected $fillable = [
         'full_name', 'short_name', 'description', 'register_status', 'department_id', 'user_id'

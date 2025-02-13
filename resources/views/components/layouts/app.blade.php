@@ -24,7 +24,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        @include('components.layouts.partials.sidebar')
+        @include('components.layouts.partials.sidebar', ['menu' => ''])
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">

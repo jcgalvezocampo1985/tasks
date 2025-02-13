@@ -21,11 +21,6 @@
                 </select>
                 @error('perfil') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
             </div>
-            <div class="col-4 col-sm-4 col-md-4 col-lg-4 col-xl-4 mt-3">
-                <label for="password">Password</label>
-                <input wire:model.live='password' type="password" class="form-control" placeholder="Password">
-                @error('password') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror
-            </div>
         </div>
         <hr>
         @if($perfil == 'Cliente')
@@ -74,6 +69,6 @@
         <button class="btn btn-primary float-right">Guardar</button>
     </form>
 </x-modal>
-@section('js')
+{{-- @section('js')
 @include('livewire.user.script')
-@endsection
+@endsection --}}

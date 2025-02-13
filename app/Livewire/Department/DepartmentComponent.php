@@ -15,6 +15,7 @@ class DepartmentComponent extends Component
 {
     use WithPagination;
 
+    /* #region Properties */
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -23,6 +24,7 @@ class DepartmentComponent extends Component
     public $short_name;
     public $description;
     public $institution_id;
+    /* #endregion */
 
     /* #region public function mount() */
     public function mount()
@@ -74,7 +76,7 @@ class DepartmentComponent extends Component
                                         ->orderBy('id', 'desc')
                                         ->paginate($this->cant);
 
-        return view('livewire.department.department-component',[
+        return view('livewire.department.index-component',[
             'querySelectDepartment' => $querySelectDepartment,
             'querySelectInstitution' => $querySelectInstitution
         ]);
@@ -99,7 +101,7 @@ class DepartmentComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalDepartment');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Departamento creado correctamente');
+        $this->dispatch('msg', ['msg' => 'Departamento creado correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -129,7 +131,7 @@ class DepartmentComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalDepartment');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Departamento modificado correctamente');
+        $this->dispatch('msg', ['msg' => 'Departamento modificado correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -142,7 +144,7 @@ class DepartmentComponent extends Component
         $department = Department::findOrFail($id);
         $department->delete();
 
-        $this->dispatch('msg', 'Departamento eliminado correctamente');
+        $this->dispatch('msg', ['msg' => 'Departamento eliminado correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
@@ -154,7 +156,7 @@ class DepartmentComponent extends Component
         $department->register_status = 'Disabled';
         $department->save();
 
-        $this->dispatch('msg', 'Departamento deshabilitado correctamente');
+        $this->dispatch('msg', ['msg' => 'Departamento deshabilitado correctamente', 'type' => 'success']);
     }
     /* #endregion */
     
@@ -166,7 +168,7 @@ class DepartmentComponent extends Component
         $department->register_status = 'Enabled';
         $department->save();
 
-        $this->dispatch('msg', 'Departamento habilitado correctamente');
+        $this->dispatch('msg', ['msg' => 'Departamento habilitado correctamente', 'type' => 'success']);
     }
     /* #endregion */
 

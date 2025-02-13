@@ -15,6 +15,7 @@ class InstitutionComponent extends Component
 {
     use WithPagination;
 
+    /* #region Properties */
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -22,6 +23,7 @@ class InstitutionComponent extends Component
     public $full_name;
     public $short_name;
     public $description;
+    /* #endregion */
 
     /* #region public function mount() */
     public function mount()
@@ -66,7 +68,7 @@ class InstitutionComponent extends Component
                                             ->orderBy('id', 'desc')
                                             ->paginate($this->cant);
 
-        return view('livewire.institution.institution-component',[
+        return view('livewire.institution.index-component',[
             'querySelectInstitution' => $querySelectInstitution
         ]);
     }
@@ -90,7 +92,7 @@ class InstitutionComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalInstitution');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Institución creada correctamente');
+        $this->dispatch('msg', ['msg' => 'Institución creada correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -119,7 +121,7 @@ class InstitutionComponent extends Component
         //Cerrar modal
         $this->dispatch('close-modal', 'modalInstitution');
         //Mostrar mensaje
-        $this->dispatch('msg', 'Institución modificada correctamente');
+        $this->dispatch('msg', ['msg' => 'Institución modificada correctamente', 'type' => 'success']);
         //Reset de campos
         $this->clean();
     }
@@ -132,7 +134,7 @@ class InstitutionComponent extends Component
         $institution = Institution::findOrFail($id);
         $institution->delete();
 
-        $this->dispatch('msg', 'Institución eliminada correctamente');
+        $this->dispatch('msg', ['msg' => 'Institución eliminada correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
@@ -144,7 +146,7 @@ class InstitutionComponent extends Component
         $institution->register_status = 'Disabled';
         $institution->save();
 
-        $this->dispatch('msg', 'Institución deshabilitada correctamente');
+        $this->dispatch('msg', ['msg' => 'Institución deshabilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
     
@@ -156,7 +158,7 @@ class InstitutionComponent extends Component
         $institution->register_status = 'Enabled';
         $institution->save();
 
-        $this->dispatch('msg', 'Institución habilitada correctamente');
+        $this->dispatch('msg', ['msg' => 'Institución habilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
 

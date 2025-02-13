@@ -72,4 +72,5 @@
     </x-card>
 
     @include('livewire.task.form-component')
+    @include('components.layouts.partials.sidebar', ['menu' => $this->menu])
 </div>
