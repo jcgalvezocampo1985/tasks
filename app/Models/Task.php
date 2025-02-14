@@ -26,4 +26,9 @@ class Task extends Model
     {
         return $this->belongsTo(Client::class, 'client_id');
     }
+
+    public function task_history()
+    {
+        return $this->hasMany(TaskHistory::class, 'task_id');
+    }
 }

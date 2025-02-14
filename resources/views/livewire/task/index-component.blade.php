@@ -1,7 +1,7 @@
 <div>
     <x-card cardTitle="Listado de Usuarios ({{$this->totalRegistros}})" cardTools="Card Tools">
         <x:slot:cardTools>
-            <a href="#" class="btn btn-primary" wire:click='create'>
+            <a href="#" class="btn btn-outline-primary" wire:click='create'>
                 {!! icons('plus') !!}
                 Crear Tarea
             </a>
@@ -29,7 +29,7 @@
                 <td>{{$task->id}}</td>
                 <td style="min-width: 150px;width:150px;">{{$task->name}}</td>
                 <td>
-                    <textarea cols="10" rows="10" readonly class="form-control" style="width: 300px;min-width: 300px;max-width: 300px;height: 80px;resize: none;">{{$task->description}}</textarea>
+                    <span class="contenedor-texto tooltips" data-toggle="tooltip" data-placement="top" title="{{$task->description}}">{{$task->description}}</span>
                 </td>
                 <td><a href="{{$task->url_course}}" target="_blank">Ir al curso</a></td>
                 <td style="min-width: 100px;width:100px;">{{$task->start_date}}</td>
@@ -64,7 +64,7 @@
                     @endif
                 </td>
                 <td>
-                    <a href="{{route()}}" class="btn btn-success btn-xs" title="Mostrar">
+                    <a href="{{route('tareas.show', $task)}}" class="btn btn-success btn-xs" title="Mostrar">
                         {!! icons('show') !!}
                     </a>
                 </td>

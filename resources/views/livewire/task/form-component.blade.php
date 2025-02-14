@@ -68,6 +68,9 @@
             </div>
         </div>
         <hr>
-        <button class="btn btn-primary float-right">Guardar</button>
+        <button class="btn btn-outline-success float-right">
+            {!! icons('save') !!}
+            Guardar
+        </button>
     </form>
 </x-modal>

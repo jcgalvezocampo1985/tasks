@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Task::class, 'user_id');
     }
+
+    public function task_histories()
+    {
+        return $this->hasMany(TaskHistory::class, 'user_id');
+    }
 }

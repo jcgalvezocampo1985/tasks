@@ -1,5 +1,6 @@
 <?php
 
+use App\Livewire\Task\TaskShowComponent;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Home\Inicio;
 use App\Livewire\Institution\InstitutionComponent;
@@ -21,3 +22,4 @@ Route::get('/instituciones', InstitutionComponent::class)->name('instituciones')
 Route::get('/departamentos', DepartmentComponent::class)->name('departamentos');//->middleware(['auth']);
 Route::get('/usuarios', UserComponent::class)->name('users');//->middleware(['auth']);
 Route::get('/tareas', TaskComponent::class)->name('tareas');//->middleware(['auth']);
+Route::get('/tareas/{task}', TaskShowComponent::class)->name('tareas.show');//->middleware(['auth']);

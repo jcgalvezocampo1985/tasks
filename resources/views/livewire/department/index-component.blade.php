@@ -1,7 +1,7 @@
 <div>
     <x-card cardTitle="Listado de Departamentos ({{$this->totalRegistros}})" cardTools="Card Tools">
         <x:slot:cardTools>
-            <a href="#" class="btn btn-primary" wire:click='create'>
+            <a href="#" class="btn btn-outline-primary" wire:click='create'>
                 {!! icons('plus') !!}
                 Crear Departamento
             </a>

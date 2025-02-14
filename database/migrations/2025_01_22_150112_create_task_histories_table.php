@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('task_histories', function (Blueprint $table) {
             $table->increments('id');
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->char('minutes', 10);
-            $table->text('description');
-            $table->enum('task_status', ['Paused','Started','Stoped','Finished'])->default('Paused');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date')->nullable();
+            $table->char('minutes', 10)->nullable();
+            $table->text('description')->nullable();
+            $table->enum('task_history_status', ['Paused','Started','Stoped','Finished','Canceled'])->default('Started');
             $table->enum('register_status', ['Enabled', 'Disabled'])->default('Enabled');
             $table->unsignedInteger('task_id');
             $table->unsignedBigInteger('user_id');
