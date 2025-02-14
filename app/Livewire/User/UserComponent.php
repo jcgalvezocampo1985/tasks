@@ -62,8 +62,8 @@ class UserComponent extends Component
     protected function rules()
     {
         $rules = [
-            'name' => 'required|max:255|unique:users,id,'.$this->id,
-            'email' => 'required|max:255|unique:users,email,'.$this->id,
+            'name' => 'required|max:255',
+            'email' => 'required|max:255|email|unique:users,email,'.$this->id,
             'perfil' => [
                 'required',
                 Rule::in(["Admin","Cliente","Técnico"]),
@@ -197,12 +197,25 @@ class UserComponent extends Component
     {
         $user->update($this->validate());
 
-        if($user->clients->count() > 0){
-            $user->clients[0]->full_name = $this->full_name;
-            $user->clients[0]->short_name = $this->short_name;
-            $user->clients[0]->description = $this->description;
-            $user->clients[0]->department_id = $this->department_id;
-            $user->clients[0]->update();
+        if($this->perfil == 'Cliente'){
+            if($user->clients->count() > 0)
+            {
+                $user->clients[0]->full_name = $this->full_name;
+                $user->clients[0]->short_name = $this->short_name;
+                $user->clients[0]->description = $this->description;
+                $user->clients[0]->department_id = $this->department_id;
+                $user->clients[0]->update();
+            }
+            else
+            {
+                Client::create([
+                    'full_name' => $this->full_name,
+                    'short_name' => $this->short_name,
+                    'description' => $this->description,
+                    'department_id' => $this->department_id,
+                    'user_id' => $this->id
+                ]);
+            }
         }
         //Cerrar modal
         $this->dispatch('close-modal', 'modalUser');
@@ -270,7 +283,7 @@ class UserComponent extends Component
     public function clean()
     {
         //Reset de campos
-        $this->reset(['id','name','email','perfil','full_name','short_name','description','deparment_id','institution_id']);
+        $this->reset(['id','name','email','perfil','full_name','short_name','description','department_id','institution_id']);
         //Reset mensajes validación
         $this->resetErrorBag();
     }

@@ -10,8 +10,8 @@
                 <label for="client_id">Cliente</label>
                 <select wire:model.live='client_id' class="form-control">
                     <option value="">Selecciona</option>
-                    @foreach($querySelectUserClientes as $row)
-                    <option value="{{$row->id}}">{{$row->name}}</option>
+                    @foreach($querySelectClient as $row)
+                    <option value="{{$row->id}}">{{$row->short_name}}</option>
                     @endforeach
                 </select>
                 @error('client_id') <span class="text-danger w-100 mt-2">{{ $message }}</span> @enderror

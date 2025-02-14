@@ -28,16 +28,18 @@
             <tr>
                 <td>{{$task->id}}</td>
                 <td>{{$task->name}}</td>
-                <td>{{$task->description}}</td>
-                <td>{{$task->url_course}}</td>
-                <td>{{$task->start_date}}</td>
+                <td>
+                    <textarea cols="10" rows="5" readonly class="form-control" style="width: 350px;min-width: 350px;max-width: 350px;height: 60px;resize: none;">{{$task->description}}</textarea>
+                </td>
+                <td><a href="{{$task->url_course}}" target="_blank">Ir al curso</a></td>
+                <td style="min-width: 100px;width:100px;">{{$task->start_date}}</td>
                 <td>{{$task->end_date}}</td>
                 <td>{{$task->minutes}}</td>
                 <td>{{$task->difficulty_level}}</td>
                 <td>{{$task->priority}}</td>
                 <td>{{$task->task_status}}</td>
-                <td>{{$task->client_id->full_name}}</td>
-                <td>{{$task->user_id->name}}</td>
+                <td>{{$task->client->full_name}}</td>
+                <td>{{$task->user->name}}</td>
                 <td>
                     @if($task->register_status == 'Enabled')
                         <a wire:click="$dispatch('disabled', {id: {{$task->id}}, eventName: 'disabledTask'})" class="btn" title="Clic para deshabilitar">

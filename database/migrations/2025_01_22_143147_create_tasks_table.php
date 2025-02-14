@@ -15,10 +15,10 @@ return new class extends Migration
             $table->increments('id');
             $table->string('name');
             $table->text('description');
-            $table->string('url_course');
+            $table->text('url_course');
             $table->date('start_date');
             $table->date('end_date');
-            $table->char('minutes', 10);
+            $table->char('minutes', 10)->nullable();
             $table->enum('difficulty_level', ['High','Medium','Low']);
             $table->enum('priority', ['High','Medium','Low']);
             $table->enum('task_status', ['Paused','Started','Stoped','Finished'])->default('Paused');

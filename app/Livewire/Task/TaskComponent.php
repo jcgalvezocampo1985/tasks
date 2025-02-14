@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Task;
 
+use App\Models\Client;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Attributes\Title;
@@ -38,7 +40,7 @@ class TaskComponent extends Component
     /* #region public function mount() */
     public function mount()
     {
-        
+
     }
     /* #endregion */
 
@@ -46,15 +48,23 @@ class TaskComponent extends Component
     protected function rules()
     {
         return [
-            'name' => 'required|max:255|unique:task,id,'.$this->id,
-            'description' => 'required|max:255',
-            'url_course' => 'required|url_course:http,https',
-            'start_date' => 'required|date|date_format:Y-m-d',
-            'end_date' => 'required|date|date_format:Y-m-d',
-            'minutes' => 'required|max:10|numeric',
-            'difficulty_level' => 'required|in(["High","Medium","Low"])',
-            'priority' => 'required|in(["High","Medium","Low"])',
-            'task_status' => 'required|in(["Paused","Started","Stoped","Finished"])',
+            'name' => 'required|max:255',
+            'description' => 'required|max:1000',
+            'url_course' => 'required',
+            'start_date' => 'required',
+            'end_date' => 'required',
+            'difficulty_level' => [
+                'required',
+                Rule::in(["High","Medium","Low"]),
+            ],
+            'priority' => [
+                'required',
+                Rule::in(["High","Medium","Low"]),
+            ],
+            'task_status' => [
+                'required',
+                Rule::in(["Paused","Started","Stoped","Finished"]),
+            ],
             'client_id' => 'required',
             'user_id' => 'required',
         ];
@@ -70,7 +80,6 @@ class TaskComponent extends Component
             'url_course' => 'Curso',
             'start_date' => 'Fecha Inicio',
             'end_date' => 'Fecha Termino',
-            'minutes' => 'Minutos',
             'difficulty_level' => 'Nivel Dificultad',
             'priority' => 'Prioridad',
             'task_status' => 'Estado Tarea',
@@ -107,12 +116,12 @@ class TaskComponent extends Component
                                 ->orderBy('id', 'desc')
                                 ->paginate($this->cant);
 
-        $querySelectUserClientes = User::where('perfil', 'Cliente')->get();
+        $querySelectClient = Client::all();
         $querySelectUserTecnicos = User::where('perfil', 'Técnico')->get();
 
         return view('livewire.task.index-component',[
             'querySelectTask' => $querySelectTask,
-            'querySelectUserClientes' => $querySelectUserClientes,
+            'querySelectClient' => $querySelectClient,
             'querySelectUserTecnicos' => $querySelectUserTecnicos,
         ]);
     }
@@ -194,7 +203,7 @@ class TaskComponent extends Component
         $this->dispatch('msg', ['msg' => 'Tarea deshabilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
-    
+
     /* #region public function enabled($id) */
     #[On('enabledUser')]
     public function enabled($id)

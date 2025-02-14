@@ -24,5 +24,4 @@
             {{$slot}}
         </tbody>
     </table>
-
 </div>
