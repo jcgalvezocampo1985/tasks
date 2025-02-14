@@ -24,6 +24,7 @@ class UserComponent extends Component
     use WithPagination;
 
     /* #region Properties */
+    public $menu = 'Usuarios';
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;

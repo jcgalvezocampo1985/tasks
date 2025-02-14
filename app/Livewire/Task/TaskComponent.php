@@ -61,10 +61,6 @@ class TaskComponent extends Component
                 'required',
                 Rule::in(["High","Medium","Low"]),
             ],
-            'task_status' => [
-                'required',
-                Rule::in(["Paused","Started","Stoped","Finished"]),
-            ],
             'client_id' => 'required',
             'user_id' => 'required',
         ];
@@ -82,7 +78,6 @@ class TaskComponent extends Component
             'end_date' => 'Fecha Termino',
             'difficulty_level' => 'Nivel Dificultad',
             'priority' => 'Prioridad',
-            'task_status' => 'Estado Tarea',
             'client_id' => 'Cliente',
             'user_id' => 'Usuario',
         ];
@@ -151,29 +146,35 @@ class TaskComponent extends Component
     }
     /* #endregion */
 
-    /* #region public function edit(User $user) */
-    public function edit(User $user)
+    /* #region public function edit(Task $task) */
+    public function edit(Task $task)
     {
-        /* $this->clean();
+        $this->clean();
 
-        $this->id = $user->id;
-        $this->name = $user->name;
-        $this->email = $user->email;
-        $this->perfil = $user->perfil;
-        $this->password = $user->password;
+        $this->id = $task->id;
+        $this->name = $task->name;
+        $this->description = $task->description;
+        $this->url_course = $task->url_course;
+        $this->start_date = $task->start_date;
+        $this->end_date = $task->end_date;
+        $this->difficulty_level = $task->difficulty_level;
+        $this->priority = $task->priority;
+        $this->task_status = $task->task_status;
+        $this->client_id = $task->client_id;
+        $this->user_id = $task->user_id;
 
         //Abrir modal
-        $this->dispatch('open-modal', 'modalUser'); */
+        $this->dispatch('open-modal', 'modalTask');
     }
     /* #endregion */
 
-    /* #region public function update(User $user) */
-    public function update(User $user)
+    /* #region public function update(Task $task) */
+    public function update(Task $task)
     {
-        $user->update($this->validate());
+        $task->update($this->validate());
 
         //Cerrar modal
-        $this->dispatch('close-modal', 'modalUser');
+        $this->dispatch('close-modal', 'modalTask');
         //Mostrar mensaje
         $this->dispatch('msg', ['msg' => 'Tarea modificada correctamente', 'type' => 'success']);
         //Reset de campos
@@ -182,25 +183,127 @@ class TaskComponent extends Component
     /* #endregion */
 
     /* #region public function detroy($id) */
-    #[On('destroyUser')]
+    #[On('destroyTask')]
     public function detroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
+        $task = Task::findOrFail($id);
+        $task->delete();
 
         $this->dispatch('msg', ['msg' => 'Tarea eliminada correctamente', 'type' => 'success']);
     }
     /* #endregion */
 
     /* #region public function disabled($id) */
-    #[On('disabledUser')]
+    #[On('disabledTask')]
     public function disabled($id)
     {
-        $user = User::findOrFail($id);
-        $user->register_status = 'Disabled';
-        $user->save();
+        $task = User::findOrFail($id);
+        $task->register_status = 'Disabled';
+        $task->save();
 
         $this->dispatch('msg', ['msg' => 'Tarea deshabilitada correctamente', 'type' => 'success']);
+    }
+    /* #endregion */
+
+    /* #region public function editTaskStatus(Task $task) */
+    public function editTaskStatus(Task $task)
+    {
+        $this->clean();
+
+        $this->id = $task->id;
+        $this->task_status = $task->task_status;
+
+        //Abrir modal
+        $this->dispatch('open-modal', 'modalTaskStatus');
+    }
+    /* #endregion */
+
+    /* #region public function updateTaskStatus(Task $task) */
+    public function updateTaskStatus(Task $task)
+    {
+        $validated = $this->validate([
+            'task_status' => [
+                'required',
+                Rule::in(["Paused","Started","Stoped","Finished"]),
+            ],
+        ]);
+
+        $task->update($validated);
+
+        //Cerrar modal
+        $this->dispatch('close-modal', 'modalTaskStatus');
+        //Mostrar mensaje
+        $this->dispatch('msg', ['msg' => 'Estado Tarea modificado correctamente', 'type' => 'success']);
+        //Reset de campos
+        $this->clean();
+    }
+    /* #endregion */
+
+    /* #region public function editDifficultyLevel(Task $task) */
+    public function editDifficultyLevel(Task $task)
+    {
+        $this->clean();
+
+        $this->id = $task->id;
+        $this->difficulty_level = $task->difficulty_level;
+
+        //Abrir modal
+        $this->dispatch('open-modal', 'modalDifficultyLevel');
+    }
+    /* #endregion */
+
+    /* #region public function updateDifficultyLevel(Task $task) */
+    public function updateDifficultyLevel(Task $task)
+    {
+        $validated = $this->validate([
+            'difficulty_level' => [
+                'required',
+                Rule::in(["High","Medium","Low"])
+            ],
+        ]);
+
+        $task->update($validated);
+
+        //Cerrar modal
+        $this->dispatch('close-modal', 'modalDifficultyLevel');
+        //Mostrar mensaje
+        $this->dispatch('msg', ['msg' => 'Nivel Dificultad modificado correctamente', 'type' => 'success']);
+        //Reset de campos
+        $this->clean();
+    }
+    /* #endregion */
+
+    /* #region public function editPriority(Task $task) */
+    public function editPriority(Task $task)
+    {
+        $this->clean();
+
+        $this->id = $task->id;
+        $this->priority = $task->priority;
+
+        //Abrir modal
+        $this->dispatch('open-modal', 'modalPriority');
+    }
+    /* #endregion */
+
+    /* #region public function updatePriority(Task $task) */
+    public function updatePriority(Task $task)
+    {
+        $validated = $this->validate([
+            'priority' => [
+                'required',
+                Rule::in(["High","Medium","Low"])
+            ]
+        ]);
+
+        $task->update($validated);
+
+        //Cerrar modal
+        $this->dispatch('close-modal', 'modalPriority');
+        //Mostrar mensaje
+        $this->dispatch('msg', ['msg' => 'Prioridad modificada correctamente', 'type' => 'success']);
+        //Reset de campos
+        $this->clean();
     }
     /* #endregion */
 

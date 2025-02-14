@@ -16,4 +16,6 @@
             </tr>
         </x-table>
     </x-card>
+
+    @include('components.layouts.partials.sidebar', ['menu' => $this->menu])
 </div>

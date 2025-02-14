@@ -56,4 +56,5 @@
     </x-card>
 
     @include('livewire.user.form-component')
+    @include('components.layouts.partials.sidebar', ['menu' => $this->menu])
 </div>

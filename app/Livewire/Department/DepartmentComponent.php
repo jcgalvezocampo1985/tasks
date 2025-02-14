@@ -16,6 +16,7 @@ class DepartmentComponent extends Component
     use WithPagination;
 
     /* #region Properties */
+    public $menu = 'Departamentos';
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -159,7 +160,7 @@ class DepartmentComponent extends Component
         $this->dispatch('msg', ['msg' => 'Departamento deshabilitado correctamente', 'type' => 'success']);
     }
     /* #endregion */
-    
+
     /* #region public function enabled($id) */
     #[On('enabledDepartment')]
     public function enabled($id)

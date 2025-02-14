@@ -16,6 +16,7 @@ class InstitutionComponent extends Component
     use WithPagination;
 
     /* #region Properties */
+    public $menu = 'Instituciones';
     public $totalRegistros = 0;
     public $search = '';
     public $cant = 5;
@@ -149,7 +150,7 @@ class InstitutionComponent extends Component
         $this->dispatch('msg', ['msg' => 'Institución deshabilitada correctamente', 'type' => 'success']);
     }
     /* #endregion */
-    
+
     /* #region public function enabled($id) */
     #[On('enabledInstitution')]
     public function enabled($id)
