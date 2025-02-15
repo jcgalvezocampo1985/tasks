@@ -52,12 +52,21 @@ class TaskShowComponent extends Component
     /* #region public function mount() */
     public function mount()
     {
-        $queryCountTaskHistory = TaskHistory::where([
+        /* $queryCountTaskHistory = TaskHistory::where([
                                                 ['user_id', '=', Auth::user()->id],
                                                 ['task_id', '=', $this->task->id]
                                             ])
                                             ->whereIn('task_history_status', ['Started','Paused'])
-                                            ->count();
+                                            ->count(); */
+
+        $querySelectTaskHistory = TaskHistory::where([
+                                                ['user_id', '=', Auth::user()->id],
+                                                ['task_id', '=', $this->task->id]
+                                            ])
+                                            ->whereIn('task_history_status', ['Started','Paused'])
+                                            ->max('id');
+
+        dd($querySelectTaskHistory);
 
         $this->task_history_status = $queryCountTaskHistory > 0 ? true : false;
     }

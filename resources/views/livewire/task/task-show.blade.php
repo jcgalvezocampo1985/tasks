@@ -76,7 +76,7 @@
                                     {!! badge($row->task_history_status) !!}
                                 </a>
                             </td>
-                        </tr>                        
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
