@@ -40,7 +40,8 @@ class TaskComponent extends Component
     /* #region public function mount() */
     public function mount()
     {
-
+        //$task = Task::findOrFail($this->id);
+        //$this->task_status = $task->task_status;
     }
     /* #endregion */
 

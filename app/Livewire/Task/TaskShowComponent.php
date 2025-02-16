@@ -26,6 +26,7 @@ class TaskShowComponent extends Component
     public $url_file;
     public $task_history_status;
     public $task_status;
+    public $image;
 
     /* #region protected function rules() */
     protected function rules()
@@ -52,23 +53,20 @@ class TaskShowComponent extends Component
     /* #region public function mount() */
     public function mount()
     {
-        /* $queryCountTaskHistory = TaskHistory::where([
-                                                ['user_id', '=', Auth::user()->id],
-                                                ['task_id', '=', $this->task->id]
-                                            ])
-                                            ->whereIn('task_history_status', ['Started','Paused'])
-                                            ->count(); */
+        $this->task_history_status = 'Finished';
 
-        $querySelectTaskHistory = TaskHistory::where([
-                                                ['user_id', '=', Auth::user()->id],
-                                                ['task_id', '=', $this->task->id]
-                                            ])
-                                            ->whereIn('task_history_status', ['Started','Paused'])
-                                            ->max('id');
+        $querySelectMaxTaskHistory = TaskHistory::where([
+                                    ['user_id', '=', Auth::user()->id],
+                                    ['task_id', '=', $this->task->id]
+                                ])
+                                ->whereIn('task_history_status', ['Started','Paused'])
+                                ->max('id');
 
-        dd($querySelectTaskHistory);
-
-        $this->task_history_status = $queryCountTaskHistory > 0 ? true : false;
+        if($querySelectMaxTaskHistory != null)
+        {
+            $querySelectTaskHistory = TaskHistory::findOrFail($querySelectMaxTaskHistory);
+            $this->task_history_status = $querySelectTaskHistory->task_history_status;
+        }
     }
     /* #endregion */
 
@@ -83,29 +81,13 @@ class TaskShowComponent extends Component
     }
     /* #endregion */
 
-    /* #region public function create() */
-    public function create()
+    public function update()
     {
-        $this->clean();
-        $this->id = 0;
-        //Abrir modal
-        $this->dispatch('open-modal', 'modalTaskHistory');
+        if($this->image)
+        {
+            $custonName = 'task-history/'.uniqid().'.'.$this->image->extension();
+        }
     }
-    /* #endregion */
-
-    /* #region public function store() */
-    public function store()
-    {
-        TaskHistory::create($this->validate());
-
-        //Cerrar modal
-        $this->dispatch('close-modal', 'modalTaskHistory');
-        //Mostrar mensaje
-        $this->dispatch('msg', ['msg' => 'Avance de tarea creado correctamente', 'type' => 'success']);
-        //Reset de campos
-        $this->clean();
-    }
-    /* #endregion */
 
     /* #region public function clean() */
     public function clean()

@@ -1,17 +1,15 @@
 <div>
     <x-card cardTitle="Tarea: {{$task->name}}" cardTools="Card Tools">
         <x:slot:cardTools>
-            <a href="{{route('tareas')}}" class="btn btn-outline-warning" wire:click='create'>
+            <a href="{{route('tareas')}}" class="btn btn-outline-warning">
                 {!! icons('back') !!}
                 Regresar
             </a>
-            @if($this->task_status == 'Started')
-                @if(!$this->task_history_status)
-                    <a href="#" class="btn btn-outline-primary" wire:click='startTaskHistory'>
-                        {!! icons('plus') !!}
-                        Iniciar nueva avance
-                    </a>
-                @endif
+            @if($this->task_history_status == 'Finished')
+                <a href="#" class="btn btn-outline-primary" wire:click='startTaskHistory'>
+                    {!! icons('plus') !!}
+                    Iniciar nueva avance
+                </a>
             @endif
         </x:slot>
         <div class="row">
@@ -61,6 +59,7 @@
                             <th>Minutos</th>
                             <th>Descripción</th>
                             <th>Estado Tarea</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -72,9 +71,20 @@
                             <td>{{$row->minutes}}</td>
                             <td>{{$row->description}}</td>
                             <td>
-                                <a href="#" wire:click='editTaskStatusHistory({{$row->id}})' class="btn" title="Editar Estado Tarea">
+                                @if($row->task_history_status != 'Finished')
+                                    <a href="#" wire:click='editTaskStatusHistory({{$row->id}})' class="btn" title="Editar Estado Tarea">
+                                        {!! badge($row->task_history_status) !!}
+                                    </a>
+                                @else
                                     {!! badge($row->task_history_status) !!}
-                                </a>
+                                @endif
+                            </td>
+                            <td>
+                                @if($row->task_history_status != 'Finished')
+                                    <a href="#" wire:click='edit({{$task->id}})' class="btn btn-info btn-xs" title="Editar">
+                                        {!! icons('edit') !!}
+                                    </a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

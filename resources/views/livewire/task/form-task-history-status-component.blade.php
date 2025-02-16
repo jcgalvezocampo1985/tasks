@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 mt-3">
                 <label for="task_history_status">Prioridad</label>
-                <select wire:model.live='task_history_status' class="form-control">
+                <select wire:model='task_history_status' class="form-control">
                     <option value="">Selecciona</option>
                     <option value="Paused">Pausada</option>
                     <option value="Started">Iniciada</option>
