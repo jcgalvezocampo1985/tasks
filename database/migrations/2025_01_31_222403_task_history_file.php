@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('task_histories_files', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->text('description');
             $table->string('url_file');
             $table->unsignedInteger('task_history_id');
             $table->timestamps();

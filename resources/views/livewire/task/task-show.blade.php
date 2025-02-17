@@ -81,7 +81,7 @@
                             </td>
                             <td>
                                 @if($row->task_history_status != 'Finished')
-                                    <a href="#" wire:click='edit({{$task->id}})' class="btn btn-info btn-xs" title="Editar">
+                                    <a href="#" wire:click='formUpload({{$row->id}})' class="btn btn-info btn-xs" title="Editar">
                                         {!! icons('edit') !!}
                                     </a>
                                 @endif

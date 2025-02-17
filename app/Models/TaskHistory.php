@@ -26,4 +26,9 @@ class TaskHistory extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function task_history_files()
+    {
+        return $this->hasMany(TaskHistoryFile::class, 'task_history_id');
+    }
 }

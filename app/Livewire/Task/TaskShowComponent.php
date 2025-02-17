@@ -45,7 +45,8 @@ class TaskShowComponent extends Component
         return [
             'start_date' => 'Fecha Inicio',
             'end_date' => 'Fecha Termino',
-            'description' => 'Descripción'
+            'description' => 'Descripción',
+            'image' => 'Imagen'
         ];
     }
     /* #endregion */
@@ -80,14 +81,6 @@ class TaskShowComponent extends Component
         return view('livewire.task.task-show', compact('querySelectTaskHistory'));
     }
     /* #endregion */
-
-    public function update()
-    {
-        if($this->image)
-        {
-            $custonName = 'task-history/'.uniqid().'.'.$this->image->extension();
-        }
-    }
 
     /* #region public function clean() */
     public function clean()
@@ -147,4 +140,25 @@ class TaskShowComponent extends Component
         $this->clean();
     }
     /* #endregion */
+
+    /* #region public function create() */
+    public function formUpload(TaskHistory $taskHistory)
+    {
+        $this->dispatch('open-modal', 'modalTaskHistoryFile');
+    }
+    /* #endregion */
+
+
+    public function saveImage()
+    {
+        /* $validated = $this->validate([
+            'image' => 'image|max:1024'
+        ]); */
+
+        dd($this->image);
+        // if($this->image)
+        // {
+        //     $custonName = 'task-history/'.uniqid().'.'.$this->image->extension();
+        // }
+    }
 }
